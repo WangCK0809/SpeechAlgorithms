@@ -489,7 +489,7 @@ static int16_t GmmProbability(VadInstT *self, int16_t *features,
 int WebRtcVad_InitCore(VadInstT *self) {
     int i;
 
-    if (self == NULL) {
+    if (NULL == self) {
         return -1;
     }
 

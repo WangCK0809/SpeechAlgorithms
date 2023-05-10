@@ -11,6 +11,7 @@
 import librosa
 from basic_functions import *
 
+
 class SpectralSubtraction:
     def __init__(self, data, sr, win_length=240, overlapping_rate=0.5, beta=0.002, noise_frames=5):
         self.data, self.fs = data, sr                                          # wave data and sample rate

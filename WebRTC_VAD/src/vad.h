@@ -19,6 +19,7 @@
 
 class Vad {
 public:
+    // 定义VAD工作模式的枚举
     enum Aggressiveness {
         kVadNormal = 0,
         kVadLowBitrate = 1,

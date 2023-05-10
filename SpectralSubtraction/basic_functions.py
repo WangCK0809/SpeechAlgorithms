@@ -151,7 +151,6 @@ def addNoise(samples, fs, mu=0, sigma=0.1, lam=1, n=1000, p=0.613, noise_type=''
 
     noise_samples += noise
 
-
     if display:
         time = np.arange(0, len(samples)) * (1.0 / fs)
 

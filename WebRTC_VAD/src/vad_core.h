@@ -33,14 +33,14 @@ enum {
 typedef struct VadInstT_ {
     int vad;
     int32_t downsampling_filter_states[4];
-    WebRtcSpl_State48khzTo8khz state_48_to_8;
+    WebRtcSpl_State48khzTo8khz state_48_to_8;   // Spl: Sample
     int16_t noise_means[kTableSize];
     int16_t speech_means[kTableSize];
     int16_t noise_stds[kTableSize];
     int16_t speech_stds[kTableSize];
     // TODO(bjornv): Change to |frame_count|.
     int32_t frame_counter;
-    int16_t over_hang;  // Over Hang
+    int16_t over_hang;  // Over Hang 延迟时间参数
     int16_t num_of_speech;
     // TODO(bjornv): Change to |age_vector|.
     int16_t index_vector[16 * kNumChannels];
