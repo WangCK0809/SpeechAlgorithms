@@ -31,7 +31,7 @@ class LSBEmbedder:
     def _waveReader(self, path):
         """
         read wave file and its corresponding
-        :param path: wav fi
+        :param path: wav file
         :return:
         """
         fs, wavsignal = wav.read(path)
@@ -46,20 +46,25 @@ class LSBEmbedder:
 
     def _LSBReplace(self, wavsignal, secret_message):
         """
-        embed watermarking a single wave
+        将秘密信息嵌入到音频信号中，生成一个新的嵌入了秘密信息的信号数组stego
+        embed watermarking in a single wave
         :param secret_message: secret message
         :return:
         """
 
-        # choose random embedding location with roulette
+        # choose random embedding location with roulette(轮盘赌)
+        # 使用轮盘赌算法来选择随机的嵌入位置
         np.random.seed(self.seed)
         roulette = np.random.rand(len(wavsignal))
 
         stego = np.array(wavsignal)
-        k = 0
+        k = 0   # k用于跟踪嵌入的秘密信息位的位置，确保每个秘密位都被处理
+        # 循环遍历原始音频信号的每个元素
         for i in range(len(wavsignal)):
+            # 确定是否对当前音频样本进行秘密信息的嵌入
             if roulette[i] <= self.rate:
                 value = wavsignal[i]
+                # 确定当前样本是否为负值
                 if value < 0:
                     value = -value
                     negative = True
@@ -67,10 +72,15 @@ class LSBEmbedder:
                     negative = False
 
                 # embed secret bit
+                # 根据秘密信息的位进行嵌入
+                # 根据k指示的位置，检查下一个秘密信息位的值，并根据其值进行相应操作
                 if k < len(secret_message) and int(secret_message[k]) == 0:
+                    # 按位与，value最低位置0
                     value = value & 0b1111111111111110
+                    # 递增k，指示已处理一个秘密信息位
                     k += 1
                 elif k < len(secret_message) and int(secret_message[k]) == 1:
+                    # 按位或，value最低位置1
                     value = value | 0b0000000000000001
                     k += 1
 
@@ -136,6 +146,7 @@ class LSBEmbedder:
                     right_stego = self._LSBReplace(self.right_signal, secret_message)
                     stego = [left_stego, right_stego]
                     self._saveWave(stego, cover_path[i], stego_path[i], inplace)
+
 
 class LSBExtractor:
     def __init__(self, seed, rate=0.9):
@@ -226,7 +237,6 @@ class LSBExtractor:
         np.random.seed(self.seed)
         roulette = np.random.rand(len(self.wavsignal))
 
-
         if self.channels == 1:
             message = self._LSBExtract(roulette, self.wavsignal)
         elif self.channels == 2:
@@ -237,6 +247,7 @@ class LSBExtractor:
         with open(message_path, "w", encoding='utf-8') as f:
             f.write(''.join(str(i) for i in message))
         return message
+
 
 def main():
     np.random.seed(0)
@@ -257,6 +268,7 @@ def main():
             count += 1
 
     print('BER', count / len(m))
+
 
 if __name__ == '__main__':
     main()

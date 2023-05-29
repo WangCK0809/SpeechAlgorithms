@@ -12,6 +12,7 @@ import numpy as np
 import librosa
 import soundfile as sf
 
+
 def Overlap1():
     block_size = 512
     shift_size = 256
@@ -23,16 +24,17 @@ def Overlap1():
     output = np.zeros(len(x))
 
     for m in range(1, M):
-        index = np.arange((m-1)*shift_size, (m+1)*shift_size)
+        index = np.arange((m - 1) * shift_size, (m + 1) * shift_size)
         xframe = x[index]
         y = xframe * window
         X = np.fft.rfft(y, NFFT)
 
         y_ifft = np.fft.irfft(X, NFFT)
-        #y_ifft = y_ifft * window
+        # y_ifft = y_ifft * window
         output[index] += y_ifft
 
     sf.write("./1_2_overlap_nowindow.wav", output, 16000)
+
 
 def Overlap2():
     block_size = 512
@@ -45,17 +47,22 @@ def Overlap2():
     output = np.zeros(len(x))
 
     for m in range(M):
-        index = np.arange(m*shift_size, m*shift_size+block_size)
+        index = np.arange(m * shift_size, m * shift_size + block_size)
         xframe = x[index]
         y = xframe * window
         X = np.fft.rfft(y, NFFT)
 
         y_ifft = np.fft.irfft(X, NFFT)
-        #y_ifft = y_ifft * window
+        # y_ifft = y_ifft * window
         output[index] += y_ifft
 
     sf.write("./3_4_overlap_nowindow.wav", output, 16000)
 
-if __name__ == "__main__":
+
+def main():
     Overlap1()
     Overlap2()
+
+
+if __name__ == "__main__":
+    main()

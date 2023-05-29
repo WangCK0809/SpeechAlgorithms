@@ -24,21 +24,21 @@ def gcc_phat(ref, sig, sr):
     c = np.real(np.fft.ifft(c))
     end = len(c)
     center_point = end // 2
-	
-	#fft shift
+
+    # fft shift
     c = np.hstack((c[center_point + 1:], c[:center_point + 1]))
     lag = np.argmax(abs(c)) - len(ref) + 1
     tau = lag / sr
     return tau
 
 
-SOUND_SPEED = 340.0
-MIC_DISTANCE = 0.15
+SOUND_SPEED = 340.0     # c
+MIC_DISTANCE = 0.15     # d
 sample_rate = 48000
 MAX_TDOA = MIC_DISTANCE / float(SOUND_SPEED)
 
 org_ref, sr = librosa.load("./data/ref.wav", sr=sample_rate)
-org_sig, sr = librosa.load("./data/sig.wav", sr=sample_rate)
+org_sig, _ = librosa.load("./data/sig.wav", sr=sample_rate)
 
 
 ref = librosa.util.frame(org_ref, 1024, 256).T

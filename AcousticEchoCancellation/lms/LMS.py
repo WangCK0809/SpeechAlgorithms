@@ -13,15 +13,14 @@ import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
+far, sr = librosa.load("../samples/far.wav", sr=16000)
+near, _ = librosa.load("../samples/near.wav", sr=16000)
 
-far, sr = librosa.load("./far.wav", sr=16000)
-near, sr = librosa.load("./near.wav", sr=16000)
-
-L = 128                 # 滤波器抽头系数
-N = len(far)            # 迭代长度
-T = 0.92                # 双端检测阈值
-lambda_DTD=0.95         # DTD更新系数
-DTDbegin=20000          # DTD 开始检测时间
+L = 128  # 滤波器抽头系数
+N = len(far)  # 迭代长度
+T = 0.92  # 双端检测阈值
+lambda_DTD = 0.95  # DTD 更新系数
+DTDbegin = 20000  # DTD 开始检测时间
 
 w = np.zeros(L)
 xin = np.zeros(L)
@@ -67,9 +66,9 @@ for i in tqdm(range(N)):
         w = wtemp
 
     # ERLE
-    powerD[i] = np.abs(d[i]) ** 2 # Power of Microphone signal
-    powerE[i] = np.abs(e[i]) ** 2 # power of Error signal
-    ERLE[i]=10 * np.log10(np.mean(powerD[i:i+L])/np.mean(powerE[i:i+L]))
+    powerD[i] = np.abs(d[i]) ** 2  # Power of Microphone signal
+    powerE[i] = np.abs(e[i]) ** 2  # power of Error signal
+    ERLE[i] = 10 * np.log10(np.mean(powerD[i:i + L]) / np.mean(powerE[i:i + L]))
 
 # 画图
 time = np.arange(0, len(far)) * (1.0 / sr)
@@ -77,7 +76,7 @@ fig = plt.figure(figsize=(10, 16))
 
 # near
 ax = fig.add_subplot(6, 1, 1)
-ax.plot(time, near,'b')
+ax.plot(time, near, 'b')
 plt.ylabel("Near")
 plt.tight_layout()
 
@@ -102,7 +101,7 @@ plt.tight_layout()
 # Decision_statistic
 ax = fig.add_subplot(6, 1, 5)
 ax.plot(time, decision_statistic, 'b')
-plt.axhline(y=T,ls=":",c="red")
+plt.axhline(y=T, ls=":", c="red")
 plt.ylabel("Decision_statistic")
 plt.tight_layout()
 

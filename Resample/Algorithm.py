@@ -12,6 +12,7 @@ import numpy as np
 import math
 from scipy import signal
 
+
 def DirectInterpolation(x, L, M):
     N = len(x)
     K = int((M / L) * N)
@@ -20,13 +21,23 @@ def DirectInterpolation(x, L, M):
     for k in range(K):
         nk = factor * k
         n = math.floor(nk)
-        if n + 1 >= len(x): continue
+        if n + 1 >= len(x):
+            continue
         w1 = nk - n
         w2 = 1 - w1
         y[k] = w1 * x[n + 1] + w2 * x[n]
     return y
 
+
 def LagrangeInterpolation(x, w, L, M):
+    """
+    Lagrange interpolation.
+    :param x:
+    :param w: 窗口长度
+    :param L:
+    :param M:
+    :return:
+    """
     N = len(x)
     K = int((M / L) * N)
     factor = L / M
@@ -37,13 +48,13 @@ def LagrangeInterpolation(x, w, L, M):
         for i in range(-w, w, 1):
             numerator = 1
             denominator = 1
-            if n  -  i >= len(x): continue
+            if n - i >= len(x):
+                continue
             for j in range(-w, w, 1):
                 if i != j:
                     numerator *= nk - (n - j)
                     denominator *= (j - i)
             y[k] += x[n - i] * numerator / denominator
-    return y
 
 
 def SineInterpolation(x, w, L, M):
@@ -55,12 +66,16 @@ def SineInterpolation(x, w, L, M):
         nk = factor * k
         n = math.floor(nk)
         for i in range(-w, w, 1):
-            if n  -  i >= len(x): continue
-            if nk - n + i == 0: continue
-            numerator = math.sin((nk - n + i))
-            denominator = math.pi * (nk - n +i)
+            if n - i >= len(x):
+                continue
+            if nk - n + i == 0:
+                continue
+            # numerator = math.sin((nk - n + i))
+            numerator = math.sin(math.pi * (nk - n + i))
+            denominator = math.pi * (nk - n + i)
             y[k] += x[n - i] * numerator / denominator
     return y
+
 
 def low_pass_FIR(data, f):
     b = signal.firwin(15, f)

@@ -17,9 +17,9 @@ upsample_sr = 32000
 downsample_sr = 8000
 sr = 16000
 w = 2
-data, fs = librosa.load("./test.wav", sr=sr)
+data, fs = librosa.load("./resample_test.wav", sr=sr)
 
-method = ["Direct","Lagrange", "Sine"]
+method = ["Direct", "Lagrange", "Sine"]
 for m in method:
     if m == "Direct":
         print("Direct Interpolation")
